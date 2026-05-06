@@ -1,0 +1,12 @@
+[package]
+name = "bio2_ident"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "bio2_ident"
+path = "src/main.rs"
+
+[dependencies]
+protocol = { workspace = true }
+clap = { workspace = true }

@@ -1,0 +1,13 @@
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+resolver = "3"
+members = ["lib/crypt", "lib/protocol", "tools/*"]
+
+[workspace.dependencies]
+crypt = { path = "lib/crypt" }
+clap = { version = "4", default-features = false, features = ["derive", "std", "help", "usage", "error-context", "suggestions"] }
+protocol = { path = "lib/protocol" }
+thiserror = "2.0.18"

@@ -1,0 +1,12 @@
+[package]
+name = "generate_mot"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "generate_mot"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+hex = "0.4"

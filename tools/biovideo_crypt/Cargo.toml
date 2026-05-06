@@ -1,0 +1,12 @@
+[package]
+name = "biovideo_decrypt"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "biovideo_crypt"
+path = "src/main.rs"
+
+[dependencies]
+crypt = { workspace = true }
+clap = { workspace = true }
