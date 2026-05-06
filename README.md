@@ -161,7 +161,7 @@ Some boards can be picky and return an error code like 0x80. If this happens, yo
 
 It also seems that Renesas Flash Programmer works better than Renesas Flash Development Toolkit, so if one tool doesn't work, try the other one.
 
-To verify that the board is correctly flashed, you can use the [bio2_ident](tools/bio2_ident) tool.
+To verify that the board is correctly flashed, you can use the [bio2_ident](tools/bio2_ident) tool (after unplugging, unshorting the pins and plugging the board again).
 
 ### Using the internal bi2a/bi2x firmware updater
 
