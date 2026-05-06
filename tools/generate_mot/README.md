@@ -5,7 +5,7 @@ This tool is used to generate a MOT file that can be flashed to the BIO2 board u
 ## Inputs
 
 You'll need the following files to generate a MOT file:
-- The data flash avaiable in [assets/data_flash.bin](assets/data_flash.bin).
+- The data flash avaiable in [assets/data_flash.bin](../assets/data_flash.bin).
 - The bio2base/bio2wrfirm either dumped using [biovideo_crypt](../biovideo_crypt) or extracted from the libaio_iob.dll using the [aio_iob_dumper](../aio_iob_dumper).
 - The firmware you want to flash, also dumped using [biovideo_crypt](../biovideo_crypt) or extracted from the libaio_iob.dll using the [aio_iob_dumper](../aio_iob_dumper).
 

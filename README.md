@@ -10,6 +10,8 @@ Any help is welcomed, as there is a lot to still be reversed and understood.
 > 
 > It has not been tested on a real cabinet, on windows, and bi2x has almost not been tested at all (except that it responds to the identify command).
 
+If you just want to flash your board and don't care about understanding how it works, just go to the [Flashing the board](#flashing-the-board) section and especially the [With MOT file and official Renesas flashing tool](#with-mot-file-and-official-renesas-flashing-tool) section.
+
 ## Tools
 
 - [aio_iob_dumper](tools/aio_iob_dumper): A tool to dump and decrypt the firmware files contained in the `libaio_iob.dll` file.
@@ -138,7 +140,7 @@ To verify that the board is correctly flashed, you can use the [bio2_ident](tool
 
 ### With MOT file and official Renesas flashing tool
 
-Renesas MCU can be flashed using their official flashing tool, such as [Renesas Flash Programmer](https://www.renesas.com/en/software-tool/renesas-flash-programmer-programming-gui) or [Renesas Flash Development Toolkit](https://www.renesas.com/en/software-tool/flash-development-toolkit-programming-gui).
+Renesas MCU (on a BIO2 board) can be flashed using their official flashing tool, such as [Renesas Flash Programmer](https://www.renesas.com/en/software-tool/renesas-flash-programmer-programming-gui) or [Renesas Flash Development Toolkit](https://www.renesas.com/en/software-tool/flash-development-toolkit-programming-gui).
 
 These tools require the use of a MOT file, which contains both the data flash and program flash. In order to get this file, please take a look at the [generate_mot](tools/generate_mot) tool.
 
@@ -148,7 +150,7 @@ Steps to flash the board using these tools:
 1. Unplug the board.
 2. Short the 2 pins near the USB port to put the board in boot mode (labeled J2 on the PCB).
 3. Plug the board while keeping the pins shorted.
-4. Start the flashing tool, select `Generic Boot Device` if you use `Renesas Flash Development Toolkit`, then select the USB connection of the board. If it doesn't appear, try using the other tool or check your USB connection. Please also check you devices manager to see if the board is detected.
+4. Start the flashing tool, select `Generic Boot Device` if you use `Renesas Flash Development Toolkit`, then select the direct USB connection of the board. If it doesn't appear, try using the other tool or check your USB connection. Please also check your devices manager to see if the board is detected.
 5. Enter 12Mhz as the clock frequency
 6. Load the MOT file.
 7. Flash the board.
@@ -156,6 +158,8 @@ Steps to flash the board using these tools:
 If you're on Linux, you can use the following command directly after step 3: `./rfp-cli -osc 12.0 -device RX62N -tool usb -a file.mot`.
 
 Some boards can be picky and return an error code like 0x80. If this happens, you have to unplug, wait for it to go off, plug the board everytime you do a new command. In that case, keep the software open.
+
+It also seems that Renesas Flash Programmer works better than Renesas Flash Development Toolkit, so if one tool doesn't work, try the other one.
 
 To verify that the board is correctly flashed, you can use the [bio2_ident](tools/bio2_ident) tool.
 
