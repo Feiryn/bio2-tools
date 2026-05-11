@@ -122,6 +122,49 @@ The details of this protocol can be found in [lib/protocol/README.md](lib/protoc
 
 ## Flashing the board
 
+### With MOT file and official Renesas flashing tool
+
+Renesas MCU (on a BIO2 board) can be flashed using their official flashing tool, such as [Renesas Flash Programmer](https://www.renesas.com/en/software-tool/renesas-flash-programmer-programming-gui) or [Renesas Flash Development Toolkit](https://www.renesas.com/en/software-tool/flash-development-toolkit-programming-gui).
+
+Be careful, using these tools will erase the whole flash, so be sure to have a valid MOT file before using them, otherwise you may brick your board.
+
+Requirements:
+- A MOT file containing the firmware to flash. You can generate this file using the [generate_mot](tools/generate_mot) tool.
+- An official Renesas flashing tool, such as [Renesas Flash Programmer](https://www.renesas.com/en/software-tool/renesas-flash-programmer-programming-gui) (recommanded) or [Renesas Flash Development Toolkit](https://www.renesas.com/en/software-tool/flash-development-toolkit-programming-gui).
+- A USB cable to connect the board to your computer.
+
+#### Using Renesas Flash Programmer (recommanded)
+
+Steps to flash the board using Renesas Flash Programmer:
+1. Unplug the board and wait for the leds to stop lighting up (if they were on).
+2. Short the 2 pins near the USB port to put the board in boot mode (labeled J2 on the PCB).
+3. Plug the board while keeping the pins shorted. The board is not anymore detected as COM port, but directly as a USB device.
+4. Start Renesas Flash Programmer, select the direct USB connection of the board. If it doesn't appear, try using the other tool or check your USB connection. Please also check your devices manager to see if the board is detected.
+5. Select RX62x as the target device
+6. Try connecting the board.
+7. Enter 12Mhz as the clock frequency.
+8. Load the MOT file.
+9. Flash the board.
+10. Unplug the board, wait for the leds to stop lighting up (if they were on), unshort the pins and plug it again to start it in normal mode.
+11. Verify that the board is working correctly using the [bio2_ident](tools/bio2_ident) tool or by verifying the board's PID and VID in the devices manager (should be `0x8040` for BI2A and `0x804C` for BI2X).
+
+Some boards can be picky and return an error code like 0x80. If this happens, you have to unplug, wait for it to go off, plug the board everytime you do a new command. In that case, keep the software open.
+
+If you're on Linux, you can use the following command directly after step 3: `./rfp-cli -osc 12.0 -device RX62N -tool usb -a file.mot`.
+
+#### Using Renesas Flash Development Toolkit
+
+Steps to flash the board using Renesas Flash Development Toolkit:
+1. Unplug the board.
+2. Short the 2 pins near the USB port to put the board in boot mode (labeled J2 on the PCB).
+3. Plug the board while keeping the pins shorted. The board is not anymore detected as COM port, but directly as a USB device.
+4. Start the flashing tool, select `Generic Boot Device` if you use `Renesas Flash Development Toolkit`, then select the direct USB connection of the board. If it doesn't appear, try using the other tool or check your USB connection. Please also check your devices manager to see if the board is detected.
+5. Enter 12Mhz as the clock frequency
+6. Load the MOT file.
+7. Flash the board.
+8. Unplug the board, wait for the leds to stop lighting up (if they were on), unshort the pins and plug it again to start it in normal mode.
+9. Verify that the board is working correctly using the [bio2_ident](tools/bio2_ident) tool or by verifying the board's PID and VID in the devices manager (should be `0x8040` for BI2A and `0x804C` for BI2X).
+
 ### With `bio2updatew7.exe`
 
 This executable can be found in the `D:\PCB\` directory of an official arcade cabinet hard drive, and is used to flash the firmware to the board.
@@ -137,31 +180,6 @@ There are also some options that be used:
 - `-skip n`: Skip count
 
 To verify that the board is correctly flashed, you can use the [bio2_ident](tools/bio2_ident) tool.
-
-### With MOT file and official Renesas flashing tool
-
-Renesas MCU (on a BIO2 board) can be flashed using their official flashing tool, such as [Renesas Flash Programmer](https://www.renesas.com/en/software-tool/renesas-flash-programmer-programming-gui) or [Renesas Flash Development Toolkit](https://www.renesas.com/en/software-tool/flash-development-toolkit-programming-gui).
-
-These tools require the use of a MOT file, which contains both the data flash and program flash. In order to get this file, please take a look at the [generate_mot](tools/generate_mot) tool.
-
-Be careful, using these tools will erase the whole flash, so be sure to have a valid MOT file before using them, otherwise you may brick your board.
-
-Steps to flash the board using these tools:
-1. Unplug the board.
-2. Short the 2 pins near the USB port to put the board in boot mode (labeled J2 on the PCB).
-3. Plug the board while keeping the pins shorted.
-4. Start the flashing tool, select `Generic Boot Device` if you use `Renesas Flash Development Toolkit`, then select the direct USB connection of the board. If it doesn't appear, try using the other tool or check your USB connection. Please also check your devices manager to see if the board is detected.
-5. Enter 12Mhz as the clock frequency
-6. Load the MOT file.
-7. Flash the board.
-
-If you're on Linux, you can use the following command directly after step 3: `./rfp-cli -osc 12.0 -device RX62N -tool usb -a file.mot`.
-
-Some boards can be picky and return an error code like 0x80. If this happens, you have to unplug, wait for it to go off, plug the board everytime you do a new command. In that case, keep the software open.
-
-It also seems that Renesas Flash Programmer works better than Renesas Flash Development Toolkit, so if one tool doesn't work, try the other one.
-
-To verify that the board is correctly flashed, you can use the [bio2_ident](tools/bio2_ident) tool (after unplugging, unshorting the pins and plugging the board again).
 
 ### Using the internal bi2a/bi2x firmware updater
 

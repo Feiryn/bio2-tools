@@ -2,27 +2,52 @@ use std::fs;
 use std::path::PathBuf;
 use std::process;
 
-use clap::{Parser, ValueHint};
+use clap::{Parser, Subcommand, ValueHint};
 
 /// Tool to generate a Motorola S-record (MOT) file for flashing the BIO2 board.
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Path to the data file (32kb)
-    #[arg(value_hint = ValueHint::FilePath)]
-    data_file: PathBuf,
+    #[command(subcommand)]
+    command: Command,
+}
 
-    /// Path to the bio2base file (128kb)
-    #[arg(value_hint = ValueHint::FilePath)]
-    bio2base_file: PathBuf,
+#[derive(Subcommand)]
+enum Command {
+    BI2A {
+        /// Path to the data file (32kb)
+        #[arg(value_hint = ValueHint::FilePath)]
+        data_file: PathBuf,
 
-    /// Path to the firmware file (32kb)
-    #[arg(value_hint = ValueHint::FilePath)]
-    firmware_file: PathBuf,
+        /// Path to the bio2base file (128kb)
+        #[arg(value_hint = ValueHint::FilePath)]
+        bio2base_file: PathBuf,
 
-    // Output MOT file path
-    #[arg(value_hint = ValueHint::FilePath)]
-    output_file: PathBuf,
+        /// Path to the firmware file (64kb)
+        #[arg(value_hint = ValueHint::FilePath)]
+        firmware_file: PathBuf,
+
+        // Output MOT file path
+        #[arg(value_hint = ValueHint::FilePath)]
+        output_file: PathBuf,
+    },
+    BI2X {
+        /// Path to the data file (32kb)
+        #[arg(value_hint = ValueHint::FilePath)]
+        data_file: PathBuf,
+
+        /// Path to the bio2wrfirm file (128kb)
+        #[arg(value_hint = ValueHint::FilePath)]
+        bio2wrfirm_file: PathBuf,
+
+        /// Path to the bi2x firmware file (128kb)
+        #[arg(value_hint = ValueHint::FilePath)]
+        firmware_file: PathBuf,
+
+        // Output MOT file path
+        #[arg(value_hint = ValueHint::FilePath)]
+        output_file: PathBuf,
+    },
 }
 
 fn load_file(path: &PathBuf, expected_size: usize) -> Vec<u8> {
@@ -79,14 +104,33 @@ fn push_data_records(mot_content: &mut String, start_address: u32, data: &[u8]) 
 fn main() {
     let args = Args::parse();
 
-    // Read the data file
-    let data = load_file(&args.data_file, 0x8000);
+    let (data, bio2_firmware, bi2a_x_firmware, output_file) = match args.command {
+        Command::BI2A {
+            data_file,
+            bio2base_file,
+            firmware_file,
+            output_file,
+        } => {
+            let data = load_file(&data_file, 0x8000);
+            let bio2_firmware = load_file(&bio2base_file, 0x20000);
+            let mut bi2a_x_firmware = load_file(&firmware_file, 0x10000);
+            bi2a_x_firmware.extend(bi2a_x_firmware.to_owned()); // Bank A and B
 
-    // Read the bio2base file
-    let bio2base = load_file(&args.bio2base_file, 0x20000);
+            (data, bio2_firmware, bi2a_x_firmware, output_file)
+        }
+        Command::BI2X {
+            data_file,
+            bio2wrfirm_file: bio2wrfirm,
+            firmware_file: kernel_file,
+            output_file,
+        } => {
+            let data = load_file(&data_file, 0x8000);
+            let bio2_firmware = load_file(&bio2wrfirm, 0x20000);
+            let bi2a_x_firmware = load_file(&kernel_file, 0x20000);
 
-    // Read the firmware file
-    let firmware = load_file(&args.firmware_file, 0x10000);
+            (data, bio2_firmware, bi2a_x_firmware, output_file)
+        }
+    };
 
     // Padding
     let padding = vec![0xFF; 0x40000];
@@ -108,25 +152,20 @@ fn main() {
     // Data records
     push_data_records(&mut mot_content, 0x00100000, &data);
     push_data_records(&mut mot_content, 0xFFF80000, &padding);
-    push_data_records(&mut mot_content, 0xFFFC0000, &bio2base);
-    push_data_records(&mut mot_content, 0xFFFE0000, &firmware); // Bank A (backup)
-    push_data_records(&mut mot_content, 0xFFFF0000, &firmware); // Bank B
+    push_data_records(&mut mot_content, 0xFFFC0000, &bio2_firmware);
+    push_data_records(&mut mot_content, 0xFFFE0000, &bi2a_x_firmware);
 
     // End of file record
     mot_content.push_str("S70500000000FA\r\n");
 
     // Write to output file
-    match fs::write(&args.output_file, mot_content) {
+    match fs::write(&output_file, mot_content) {
         Ok(_) => println!(
             "MOT file generated successfully at {}",
-            args.output_file.display()
+            output_file.display()
         ),
         Err(e) => {
-            eprintln!(
-                "Error writing MOT file {}: {}",
-                args.output_file.display(),
-                e
-            );
+            eprintln!("Error writing MOT file {}: {}", output_file.display(), e);
             process::exit(1);
         }
     }

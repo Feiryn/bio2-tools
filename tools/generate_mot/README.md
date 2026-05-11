@@ -15,12 +15,20 @@ You'll need the following files to generate a MOT file:
 
 ## Usage
 
-```
-generate_mot <data_flash_file> <bio2base/bio2wrfirm_file> <bi2a/bi2x_firmware_file> <output_mot_file>
-```
-
 > [!IMPORTANT]
 > 
 > Be consistent with both input files.
 > 
 > bi2a requires a bio2base and a bi2a firmware (both dumped from a biovideo file), and bi2x requires a bio2wrfirm and a bi2x firmware (both extracted from the libaio_iob.dll). Mixing the files will not work.
+
+### For BI2A
+
+```
+./generate_mot bi2a data_flash.bin bio2base.bin bi2a_firmware.bin output.mot
+```
+
+### For BI2X
+
+```
+./generate_mot bi2x data_flash.bin bio2wrfirm.bin bi2x_firmware.bin output.mot
+```
