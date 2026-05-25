@@ -4,10 +4,14 @@ edition = "2024"
 
 [workspace]
 resolver = "3"
-members = ["lib/crypt", "lib/protocol", "tools/*"]
+members = ["lib/*", "tools/*"]
 
 [workspace.dependencies]
-crypt = { path = "lib/crypt" }
+bi2a_protocol = { path = "lib/bi2a_protocol" }
+bi2x_protocol = { path = "lib/bi2x_protocol" }
+chrono = "0.4.44"
 clap = { version = "4", default-features = false, features = ["derive", "std", "help", "usage", "error-context", "suggestions"] }
-protocol = { path = "lib/protocol" }
+compression = { path = "lib/compression" }
+crypt = { path = "lib/crypt" }
+reader = { path = "lib/reader" }
 thiserror = "2.0.18"

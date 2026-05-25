@@ -1,8 +1,8 @@
 use std::any::Any;
 
-use crate::reader::bio2_reader::{Bio2Reader, Bio2ReaderError};
+use crate::bio2_reader::{Bio2Reader, Bio2ReaderError};
 
-pub struct Bio2TestReader {
+pub struct Bi2aTestReader {
     data: Vec<u8>,
     will_timeout: bool,
     has_rebooted: bool,
@@ -11,7 +11,7 @@ pub struct Bio2TestReader {
     written_data: Vec<String>,
 }
 
-impl Bio2Reader for Bio2TestReader {
+impl Bio2Reader for Bi2aTestReader {
     fn read_byte(&mut self) -> Result<Option<u8>, Bio2ReaderError> {
         if self.will_timeout {
             self.will_timeout = false;
@@ -217,9 +217,9 @@ impl Bio2Reader for Bio2TestReader {
     }
 }
 
-impl Bio2TestReader {
+impl Bi2aTestReader {
     pub fn new() -> Self {
-        Bio2TestReader {
+        Bi2aTestReader {
             data: Vec::new(),
             will_timeout: false,
             has_rebooted: false,
@@ -269,13 +269,13 @@ impl Bio2TestReader {
 
 #[cfg(test)]
 mod tests {
-    use crate::frame::{
+    use bi2a_protocol::{
         command_response::CommandResponse, flash_command::FlashCommand, host_command::HostCommand,
     };
 
     use super::*;
 
-    fn read_all_bytes(reader: &mut Bio2TestReader) -> Vec<u8> {
+    fn read_all_bytes(reader: &mut Bi2aTestReader) -> Vec<u8> {
         let mut bytes = Vec::new();
         while let Ok(Some(byte)) = reader.read_byte() {
             bytes.push(byte);
@@ -285,7 +285,7 @@ mod tests {
 
     #[test]
     fn test_ping() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader
             .write_bytes(&(HostCommand::Ping { ping_value: 0x00 }).to_frame(0x00))
@@ -304,7 +304,7 @@ mod tests {
 
     #[test]
     fn test_version() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader
             .write_bytes(&(HostCommand::Version).to_frame(0x01))
@@ -316,7 +316,6 @@ mod tests {
             response,
             CommandResponse::Version {
                 sequence_number: 0x01,
-                revision: 0x0D,
                 major: 0x01,
                 minor: 0x02,
                 patch: 0x0E,
@@ -338,7 +337,6 @@ mod tests {
             response,
             CommandResponse::Version {
                 sequence_number: 0x02,
-                revision: 0x0D,
                 major: 0x00,
                 minor: 0x00,
                 patch: 0x00,
@@ -351,7 +349,7 @@ mod tests {
 
     #[test]
     fn test_start_flash() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader
             .write_bytes(&HostCommand::StartFlash.to_frame(0x03))
@@ -370,7 +368,7 @@ mod tests {
 
     #[test]
     fn test_are_you_in_flash_mode() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader
             .write_bytes(&FlashCommand::AreYouInFlashMode.to_frame())
@@ -390,7 +388,7 @@ mod tests {
 
     #[test]
     fn test_start_write() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader
             .write_bytes(&FlashCommand::StartWrite { offset: 0x12345678 }.to_frame())
@@ -410,7 +408,7 @@ mod tests {
 
     #[test]
     fn test_write_block() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         // 64kb firmware
         let firmware_64kb = std::fs::read("assets/test_64k.bin").unwrap();
@@ -481,7 +479,7 @@ mod tests {
 
     #[test]
     fn test_end_write() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader
             .write_bytes(&FlashCommand::EndWrite.to_frame())
@@ -500,7 +498,7 @@ mod tests {
 
     #[test]
     fn test_reboot() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader
             .write_bytes(&FlashCommand::Reboot.to_frame())
@@ -514,7 +512,7 @@ mod tests {
 
     #[test]
     fn test_timeout() {
-        let reader = &mut Bio2TestReader::new();
+        let reader = &mut Bi2aTestReader::new();
 
         reader.simulate_timeout();
 

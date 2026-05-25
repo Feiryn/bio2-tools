@@ -1,4 +1,4 @@
 /target
-tools/bio2_flash/assets
+tools/bi2a_flash/assets
 lib/crypt/assets
-lib/protocol/assets
+lib/bi2a_protocol/assets

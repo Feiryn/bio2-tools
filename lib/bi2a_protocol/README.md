@@ -1,8 +1,8 @@
-# Firmware protocol
+# BI2A protocol
 
 ## Basic protocol
 
-The BI2A/BI2X firmware uses the following protocol, both from the computer to the board and from the board to the computer:
+The BI2A firmware uses the following protocol, both from the computer to the board and from the board to the computer:
 
 | Byte position | Size (bytes) | Description |
 | --- | --- | --- |

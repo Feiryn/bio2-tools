@@ -1,4 +1,4 @@
-use crate::ac_lz_inflate::AcLzInflate;
+use compression::ac_lz::AcLzInflate;
 
 pub fn decrypt_aio_iob_firmware(firmware: &[u8]) -> Vec<u8> {
     let mut result = Vec::with_capacity(firmware.len());

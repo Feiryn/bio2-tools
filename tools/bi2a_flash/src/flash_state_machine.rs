@@ -1,12 +1,10 @@
-use protocol::{
-    frame::{
-        command_response::{CommandResponse, CommandResponseParseError},
-        command_response_decoder::{CommandResponseDecoder, CommandResponseDecoderError},
-        flash_command::FlashCommand,
-        host_command::HostCommand,
-    },
-    reader::bio2_reader::{Bio2Reader, Bio2ReaderError},
+use bi2a_protocol::{
+    command_response::{CommandResponse, CommandResponseParseError},
+    command_response_decoder::{CommandResponseDecoder, CommandResponseDecoderError},
+    flash_command::FlashCommand,
+    host_command::HostCommand,
 };
+use reader::bio2_reader::{Bio2Reader, Bio2ReaderError};
 use thiserror::Error;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -347,7 +345,6 @@ impl FlashStateMachine {
                 match response {
                     // Version response received
                     Ok(CommandResponse::Version {
-                        revision,
                         major,
                         minor,
                         patch,
@@ -363,8 +360,8 @@ impl FlashStateMachine {
                             })
                         } else {
                             println!(
-                                "Received version response from the device: {} v{}.{}.{} rev {} - {} {}",
-                                name, major, minor, patch, revision, date, time
+                                "Received version response from the device: {} v{}.{}.{} - {} {}",
+                                name, major, minor, patch, date, time
                             );
                             self.state = next_state;
                             Ok(())

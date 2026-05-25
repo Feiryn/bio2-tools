@@ -8,5 +8,8 @@ name = "bio2_ident"
 path = "src/main.rs"
 
 [dependencies]
-protocol = { workspace = true }
+bi2a_protocol = { workspace = true }
+bi2x_protocol = { workspace = true }
+chrono = { workspace = true }
 clap = { workspace = true }
+reader = { workspace = true }

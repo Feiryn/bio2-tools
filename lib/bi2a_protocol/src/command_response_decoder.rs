@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-use crate::frame::command_response::{CommandResponse, CommandResponseParseError};
+use crate::command_response::{CommandResponse, CommandResponseParseError};
 
 /// Decoder for command responses received over the serial port. The decoder maintains
 /// internal state to accumulate bytes until a complete frame is received, at which point it parses
@@ -202,7 +202,6 @@ mod tests {
             frame,
             CommandResponse::Version {
                 sequence_number: 0x01,
-                revision: 0x0D,
                 major: 0x01,
                 minor: 0x02,
                 patch: 0x0E,

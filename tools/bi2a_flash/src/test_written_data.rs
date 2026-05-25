@@ -1,11 +1,11 @@
 mod tests {
-    use protocol::reader::bio2_test_reader::Bio2TestReader;
+    use reader::bi2a_test_reader::Bi2aTestReader;
 
     use crate::flash_state_machine::{FlashState, FlashStateMachine, FlashStateMachineError};
 
     #[test]
     fn test_written_data_64kb() {
-        let reader = Box::new(Bio2TestReader::new());
+        let reader = Box::new(Bi2aTestReader::new());
         let firmware_data = std::fs::read("./assets/firmware_64kb.bin")
             .expect("Failed to read firmware file")
             .try_into()
@@ -26,8 +26,8 @@ mod tests {
         let written_data = flash_machine
             .reader
             .as_any()
-            .downcast_ref::<Bio2TestReader>()
-            .expect("Reader is not a Bio2TestReader")
+            .downcast_ref::<Bi2aTestReader>()
+            .expect("Reader is not a Bi2aTestReader")
             .get_written_data();
 
         // Compare each line and print differences if they don't match
@@ -52,7 +52,7 @@ mod tests {
 
     #[test]
     fn test_written_data_128kb() {
-        let reader = Box::new(Bio2TestReader::new());
+        let reader = Box::new(Bi2aTestReader::new());
         let firmware_data = std::fs::read("./assets/firmware_128kb.bin")
             .expect("Failed to read firmware file")
             .try_into()
@@ -73,8 +73,8 @@ mod tests {
         let written_data = flash_machine
             .reader
             .as_any()
-            .downcast_ref::<Bio2TestReader>()
-            .expect("Reader is not a Bio2TestReader")
+            .downcast_ref::<Bi2aTestReader>()
+            .expect("Reader is not a Bi2aTestReader")
             .get_written_data();
 
         // Compare each line and print differences if they don't match

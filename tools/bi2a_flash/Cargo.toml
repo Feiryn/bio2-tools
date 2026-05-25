@@ -1,15 +1,16 @@
 [package]
-name = "bio2_flash"
+name = "bi2a_flash"
 version.workspace = true
 edition.workspace = true
 
 [[bin]]
-name = "bio2_flash"
+name = "bi2a_flash"
 path = "src/main.rs"
 
 [dependencies]
-protocol = { workspace = true }
+bi2a_protocol = { workspace = true }
 clap = { workspace = true }
+reader = { workspace = true }
 thiserror = { workspace = true }
 
 [dev-dependencies]

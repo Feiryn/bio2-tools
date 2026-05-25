@@ -1,0 +1,11 @@
+[package]
+name = "bi2a_protocol"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+crypt = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+reader = { workspace = true }

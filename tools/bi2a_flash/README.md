@@ -9,7 +9,7 @@ If you wish to flash from BI2A to BI2X or vice versa, you can use a MOT file (se
 ## Usage
 
 ```
-bio2_flash <firmware_file> <serial_port>
+bi2a_flash <firmware_file> <serial_port>
 ```
 
 Available options:

@@ -8,6 +8,6 @@ name = "aio_iob_dumper"
 path = "src/main.rs"
 
 [dependencies]
-protocol = { workspace = true }
+bi2a_protocol = { workspace = true }
 clap = { workspace = true }
 crypt = { workspace = true }

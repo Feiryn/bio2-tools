@@ -1,0 +1,9 @@
+[package]
+name = "bi2x_protocol"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+compression = { workspace = true }
+crypt = { workspace = true }
+thiserror = { workspace = true }

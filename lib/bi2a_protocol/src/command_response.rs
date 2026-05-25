@@ -9,7 +9,6 @@ pub enum CommandResponse {
     /// The name should be either BI2A or BI2X
     Version {
         sequence_number: u8,
-        revision: u8,
         major: u8,
         minor: u8,
         patch: u8,
@@ -73,7 +72,6 @@ impl CommandResponse {
 
                 Ok(CommandResponse::Version {
                     sequence_number,
-                    revision: payload[0],
                     major: payload[5],
                     minor: payload[6],
                     patch: payload[7],
@@ -401,7 +399,6 @@ mod tests {
         match response {
             CommandResponse::Version {
                 sequence_number,
-                revision,
                 major,
                 minor,
                 patch,
@@ -410,7 +407,6 @@ mod tests {
                 time: hour,
             } => {
                 assert_eq!(sequence_number, 0x01);
-                assert_eq!(revision, 0x0D);
                 assert_eq!(major, 0x01);
                 assert_eq!(minor, 0x02);
                 assert_eq!(patch, 0x0E);

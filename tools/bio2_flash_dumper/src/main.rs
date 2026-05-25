@@ -1,9 +1,10 @@
 use std::path::PathBuf;
 
+use bi2a_protocol::host_command::HostCommand;
 use clap::{Parser, ValueHint};
-use protocol::{
-    frame::host_command::HostCommand,
-    reader::{bio2_reader::Bio2Reader, bio2_serial_reader::Bio2SerialReader},
+use reader::{
+    bio2_reader::Bio2Reader,
+    bio2_serial_reader::{Bio2SerialFirmware, Bio2SerialReader},
 };
 
 #[derive(Parser)]
@@ -19,6 +20,7 @@ fn main() {
 
     let mut reader: Box<dyn Bio2Reader> = Box::new(
         Bio2SerialReader::new(
+            Bio2SerialFirmware::Bi2a,
             args.com_port
                 .to_str()
                 .expect("Invalid COM port path")

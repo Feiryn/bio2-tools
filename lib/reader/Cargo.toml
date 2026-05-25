@@ -1,8 +1,9 @@
 [package]
-name = "protocol"
+name = "reader"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+bi2a_protocol = { workspace = true }
 serial = "0.4.0"
 thiserror = { workspace = true }

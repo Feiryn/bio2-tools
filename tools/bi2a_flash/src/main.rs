@@ -5,8 +5,10 @@ mod test_written_data;
 use std::path::PathBuf;
 
 use clap::{Parser, ValueHint};
-use protocol::reader::{
-    bio2_reader::Bio2Reader, bio2_serial_reader::Bio2SerialReader, bio2_test_reader::Bio2TestReader,
+use reader::{
+    bi2a_test_reader::Bi2aTestReader,
+    bio2_reader::Bio2Reader,
+    bio2_serial_reader::{Bio2SerialFirmware, Bio2SerialReader},
 };
 
 use crate::flash_state_machine::{FlashState, FlashStateMachine, FlashStateMachineError};
@@ -58,10 +60,11 @@ fn main() {
 
     // Open the serial port
     let reader: Box<dyn Bio2Reader> = if args.emulate_bio2 {
-        Box::new(Bio2TestReader::new())
+        Box::new(Bi2aTestReader::new())
     } else {
         Box::new(
             Bio2SerialReader::new(
+                Bio2SerialFirmware::Bi2a,
                 args.com_port.to_str().unwrap().to_string(),
                 args.serial_timeout_ms,
             )

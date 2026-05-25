@@ -15,7 +15,7 @@ If you just want to flash your board and don't care about understanding how it w
 ## Tools
 
 - [aio_iob_dumper](tools/aio_iob_dumper): A tool to dump and decrypt the firmware files contained in the `libaio_iob.dll` file.
-- [bio2_flash](tools/bio2_flash): A tool to flash a firmware to the board using the internal firmware updater.
+- [bi2a_flash](tools/bi2a_flash): A tool to flash a firmware to a BI2A using the internal firmware updater.
 - [bio2_flash_dumper](tools/bio2_flash_dumper): A development tool used to dump the MCU using a custom firmware injected in the board. You probably don't need this tool.
 - [bio2_ident](tools/bio2_ident): A tool to identify the board and its firmware version.
 - [biovideo_crypt](tools/biovideo_crypt): A tool to encrypt and decrypt a biovideo file.
@@ -181,11 +181,11 @@ There are also some options that be used:
 
 To verify that the board is correctly flashed, you can use the [bio2_ident](tools/bio2_ident) tool.
 
-### Using the internal bi2a/bi2x firmware updater
+### Using the internal bi2a firmware updater
 
-The bi2a/bi2x firmware contains an internal firmware updater that can be used to flash a new firmware to the board. directly over the USB serial connection.
+The bi2a firmware contains an internal firmware updater that can be used to flash a new firmware to the board. directly over the USB serial connection.
 
-Please take a look at the [bio2_flash](tools/bio2_flash) tool for more details on how to use this updater.
+Please take a look at the [bi2a_flash](tools/bi2a_flash) tool for more details on how to use this updater.
 
 This tool can only be used if the board is already flashed with a valid firmware, as it musts be able to handle the flashing protocol.
 

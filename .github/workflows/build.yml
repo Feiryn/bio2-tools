@@ -51,7 +51,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           mkdir -p dist
-          for bin in aio_iob_dumper bio2_flash bio2_flash_dumper bio2_ident biovideo_crypt generate_mot; do
+          for bin in aio_iob_dumper bi2a_flash bio2_flash_dumper bio2_ident biovideo_crypt generate_mot; do
             cp target/release/$bin dist/
           done
 
@@ -60,7 +60,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          foreach ($bin in @("aio_iob_dumper", "bio2_flash", "bio2_flash_dumper", "bio2_ident", "biovideo_crypt", "generate_mot")) {
+          foreach ($bin in @("aio_iob_dumper", "bi2a_flash", "bio2_flash_dumper", "bio2_ident", "biovideo_crypt", "generate_mot")) {
             Copy-Item "target/release/$bin.exe" dist/
           }
 

@@ -3,17 +3,25 @@ use std::{any::Any, time::Duration};
 use serial::SerialPort;
 use thiserror::Error;
 
-use crate::reader::bio2_reader::{Bio2Reader, Bio2ReaderError};
+use crate::bio2_reader::{Bio2Reader, Bio2ReaderError};
 
 pub struct Bio2SerialReader {
+    firmware: Bio2SerialFirmware,
     com_port: String,
     timeout_ms: Option<u64>,
     serial_port: Box<dyn SerialPort>,
     read_buffer: Vec<u8>,
 }
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum Bio2SerialFirmware {
+    Bi2a,
+    Bi2x,
+}
+
 impl Bio2SerialReader {
     fn open(
+        firmware: &Bio2SerialFirmware,
         com_port: &String,
         timeout_ms: Option<u64>,
     ) -> Result<Box<dyn SerialPort>, Bio2SerialReaderError> {
@@ -22,7 +30,11 @@ impl Bio2SerialReader {
 
         port.reconfigure(&|settings| {
             settings
-                .set_baud_rate(serial::Baud115200)
+                .set_baud_rate(if *firmware == Bio2SerialFirmware::Bi2a {
+                    serial::Baud115200
+                } else {
+                    serial::Baud9600
+                })
                 .expect("Failed to set baud rate");
             settings.set_char_size(serial::Bits8);
             settings.set_parity(serial::ParityNone);
@@ -38,10 +50,15 @@ impl Bio2SerialReader {
         Ok(Box::new(port))
     }
 
-    pub fn new(com_port: String, timeout_ms: Option<u64>) -> Result<Self, Bio2SerialReaderError> {
-        let serial_port = Self::open(&com_port, timeout_ms)?;
+    pub fn new(
+        firmware: Bio2SerialFirmware,
+        com_port: String,
+        timeout_ms: Option<u64>,
+    ) -> Result<Self, Bio2SerialReaderError> {
+        let serial_port = Self::open(&firmware, &com_port, timeout_ms)?;
 
         Ok(Bio2SerialReader {
+            firmware,
             com_port,
             timeout_ms,
             serial_port,
@@ -87,7 +104,7 @@ impl Bio2Reader for Bio2SerialReader {
     }
 
     fn reconnect(&mut self) -> Result<(), Bio2ReaderError> {
-        let port = Self::open(&self.com_port, self.timeout_ms)
+        let port = Self::open(&self.firmware, &self.com_port, self.timeout_ms)
             .map_err(|e| Bio2ReaderError::Raw(e.to_string()))?;
         self.serial_port = port;
         Ok(())
