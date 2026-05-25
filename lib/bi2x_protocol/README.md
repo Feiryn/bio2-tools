@@ -98,7 +98,7 @@ CRC4-LGP computed over: destination node, sequence number, all raw VLQ bytes, an
 **Example:** flags byte `0x92` (`1001 0010`):
 - Bits 7–5 = `100` → MC_LZ compressed
 - Bit 4 = `1` → encrypted
-- Bits 3–0 = `0x2` → stored CRC nibble (actual CRC = `0x2 ^ 0x0F = 0x0D`)
+- Bits 3–0 = `0x2` → stored CRC nibble (actual CRC = `0x?2 ^ 0x0F = 0x02`)
 
 ### Payload Data
 
