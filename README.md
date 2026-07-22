@@ -7,8 +7,6 @@ Any help is welcomed, as there is a lot to still be reversed and understood.
 > [!WARNING] 
 > 
 > I am not responsible for any damage that may occur to your board or cabinet by using these tools.
-> 
-> It has not been tested on a real cabinet, on windows, and bi2x has almost not been tested at all (except that it responds to the identify command).
 
 If you just want to flash your board and don't care about understanding how it works, just go to the [Flashing the board](#flashing-the-board) section and especially the [With MOT file and official Renesas flashing tool](#with-mot-file-and-official-renesas-flashing-tool) section.
 
